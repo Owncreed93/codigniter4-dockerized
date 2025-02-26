@@ -1,0 +1,60 @@
+services:
+  # Servicio temporal para instalar CodeIgniter
+  installer:
+    image: composer:latest
+    container_name: codeigniter_installer
+    volumes:
+      - ./project:/app  # Montar el directorio ./app en /app dentro del contenedor
+    working_dir: /app
+    command: >
+      sh -c "composer create-project codeigniter4/appstarter . --no-dev --prefer-dist &&
+             chown -R 1000:1000"
+    networks:
+      - codeigniter_network
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        - CI_PROJECT_NAME=${CI_PROJECT_NAME}
+    image: codeigniter_v1
+    container_name: ${CI_PROJECT_NAME}
+    ports:
+      - 8080:80  # Exponer Apache en el puerto 8000
+    volumes:
+      - ./project:/var/www/html
+    depends_on:
+      - installer
+      - db
+    #environment:
+      # CI_ENV: development
+      # CI_PROJECT_NAME: ${CI_PROJECT_NAME}
+      # MYSQL_DATABASE: ${DATABASE_NAME}
+      # MYSQL_USER: ${DATABASE_USER}
+      # MYSQL_PASSWORD: ${DATABASE_PASSWORD}
+    networks:
+      - codeigniter_network
+    command: >
+      sh -c "composer install --no-dev --optimize-autoloader &&
+             apache2-foreground"
+
+  db:
+    image: mysql:8.0
+    container_name: ${CI_PROJECT_NAME}_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ${DATABASE_NAME}
+      MYSQL_USER: ${DATABASE_USER}
+      MYSQL_PASSWORD: ${DATABASE_PASSWORD}
+    ports:
+      - 3306:3306
+    volumes:
+      - ci_db_data:/var/lib/mysql
+    networks:
+      - codeigniter_network
+networks:
+  codeigniter_network:
+    driver: bridge
+volumes:
+  ci_db_data:
