@@ -33,7 +33,7 @@ class ProductService{
         if (!$this->productModel->update($id, $data)){
             return [ 'error' => $this->productModel->errors()];
         }
-        return [ 'sucess' => 'Producto actualizado correctamente.'];
+        return [ 'success' => 'Producto actualizado correctamente.'];
     }
 
     public function delete($id){
