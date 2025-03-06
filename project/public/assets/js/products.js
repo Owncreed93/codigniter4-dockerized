@@ -7,20 +7,6 @@ $(document).ready(function () {
     const productBrand =  productForm.find('#brand')[0]
     const productPrice =  productForm.find('#price')[0]
 
-    /**
-     * NEXT STEPS
-     * RESEARCH WHY CODEIGNITER FAILS WHEN App $baseURL fails when set to ''.
-     * ADD FLOAT NUMBER DISPLAY TO PRODUCT HTML INPUT TAG
-     * VALIDATE PRODUCT FORM TO AVOID EMPTY DATA OR WRONG DATA, 
-     * SERIALIZE INFORMATION SENT BACKEND AND FRONTEND
-     * ADD TRY CATCH CONFIGURATION TO PHP AND JAVASCRIPT
-     * ADD DATA TABLE SPANISH CONFIGURATION IMPROVE TITLES AND BUTTON STYLES
-     * RESEARCH TEMPLATING IN CODEIGNITER TO AVOID HTML AND JS DUPLICATION
-     * CONSIDER ADDING "STOCK" AND "CURRENCY" TABLES TO ALTER PRODUCTS TABLE BEHAVIOUR
-     * CONSIDER GROUPING ROUTES
-     * ADD UNIT TESTING TO THE PRODUCTS CLASS
-     */
-
     let productTable = $('#productTable').DataTable({
         ajax: {
             // url: '/products/list',

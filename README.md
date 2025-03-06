@@ -21,9 +21,16 @@ docker exec -it testing_codeigniter /bin/bash
 composer install
 ```
 
-## Change .env CI-Environment
+## Change Codeigniter 4 .env
 ```bash
 CI_ENVIRONMENT = development
+app.baseURL = 'http://0.0.0.0:8080/' # Usually this url
+database.default.hostname = <your_db_container>
+database.default.database = <your_db_name>
+database.default.username = <your_db_username>
+database.default.password = <your_db_passwordname>
+database.default.DBDriver = MySQLi # usually Mysqli
+database.default.port = <your_db_port>
 ```
 
 ## Create the file for migration
