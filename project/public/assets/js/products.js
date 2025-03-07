@@ -29,10 +29,28 @@ $(document).ready(function () {
         ]
     });
 
+    $('#price').on('change', function () {
+        let value = $(this).val();
+        // Reemplazar comas por puntos si el usuario escribe una coma
+        value = value.replace(',', '.');
+        $(this).val(value);
+        console.log(value);
+        // Validar que solo haya un punto decimal y números
+        if (!/^\d*\.?\d*$/.test(value)) {
+            console.log('GAAA');
+            $(this).val(value.slice(0, -1)); // Remueve el último caracter si no es válido
+        }
+    })
+    
+
     // Abrir modal para agregar producto
     $('#productModal').on('show.bs.modal', function (event) {
         $('#productForm')[0].reset();
         $('#productId').val('');
+
+        if ( !$('productId').val() ){
+            $('#price').val('0,00')
+        }
     });
 
     // Guardar producto
@@ -69,19 +87,7 @@ $(document).ready(function () {
         productModalTitle.innerText = 'Editar Producto'
         const id = $(this).data('id');
 
-        // const product = await $.ajax({
-        //     url: `${base_url}/products/get/${id}`,
-        //     method: 'GET'
-        // });
 
-        // console.log(product);
-        // if (product){
-        //     productIdTag.value = product.id
-        //     $('#productForm').find('#name')[0].value = product.name
-        //     productBrand.value = product.brand
-        //     productPrice.value = product.price
-        //     // $('#productModal').modal('show');
-        // }
         $.get(`/products/get/${id}`, function (product) {
             
             if (!product || Object.keys(product).length === 0 ) {

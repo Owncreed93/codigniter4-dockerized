@@ -46,15 +46,15 @@
                         <input type="hidden" id="productId">
                         <div class="mb-3">
                             <label class="form-label">Nombre</label>
-                            <input type="text" id="name" class="form-control" required>
+                            <input type="text" id="name" placeholder="nombre" class="form-control" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Marca</label>
-                            <input type="text" id="brand" class="form-control" required>
+                            <input type="text" id="brand" placeholder="marca" class="form-control" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Precio</label>
-                            <input type="number" id="price" class="form-control" required>
+                            <input type="number" id="price" step="0.25" min="0.00" max="10000.00" class="form-control" required>
                         </div>
                         <button type="submit" class="btn btn-success">Guardar</button>
                     </form>
