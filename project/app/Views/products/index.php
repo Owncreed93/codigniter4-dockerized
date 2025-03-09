@@ -10,13 +10,21 @@
 
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+
+    <!-- Fontawesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body class="container mt-5">
 
-    <h2 class="mb-4">Gestión de Productos</h2>
+    <div class="container">
+        <h2 class="mb-4 border-bottom border-secondary-subtle">Gestión de Productos</h2>
 
-    <!-- Botón para abrir el modal de agregar producto -->
-    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#productModal">Agregar Producto</button>
+        <!-- Botón para abrir el modal de agregar producto -->
+        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#productModal">
+            <i class="fa-solid fa-pen me-1"></i>Agregar Producto
+        </button>
+    </div>
+    
 
     <!-- Tabla con DataTables -->
     <table id="productTable" class="table table-bordered">

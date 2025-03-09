@@ -25,12 +25,19 @@ $(document).ready(function () {
         data: "id",
         render: function (data) {
           return `
-                        <button class="btn btn-warning btn-sm edit" data-id="${data}">Editar</button>
-                        <button class="btn btn-danger btn-sm delete" data-id="${data}">Eliminar</button>
+                        <button class="btn btn-warning btn-sm edit" data-id="${data}">
+                            <i class="fa-solid fa-pen-to-square me-1"></i>Editar
+                        </button>
+                        <button class="btn btn-danger btn-sm delete" data-id="${data}">
+                            <i class="fa-solid fa-trash me-1"></i>Eliminar
+                        </button>
                     `;
         },
       },
     ],
+    language: {
+        url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+    }
   });
 
   $("#productForm input").each(function () {
@@ -42,6 +49,7 @@ $(document).ready(function () {
     let isValid = true;
     $("#productForm")[0].reset();
     $("#productId").val("");
+    $('.btn-success').prop({ disabled: true})
 
     if (!$("productId").val()) {
       $("#price").val("0.00");
@@ -86,7 +94,7 @@ $(document).ready(function () {
         let value = $(this).val().trim();
         let errorSpan = $(this).next('span');
 
-        if ( value === '' || !priceRegex.test(value) ) {
+        if ( value === '' || !priceRegex.test(value) || value === '0.00') {
             errorSpan.text('El precio debe ser un número válido. Formato: #.##').removeClass('d-none');
             $('.btn-success').prop({ disabled: true});
             console.log('Es falso', isValid);
