@@ -29,10 +29,18 @@ class Product extends BaseController
 
         $response = $this->productService->create($data);
 
+        if (isset($response['errors'])) {
+            return $this->response
+                    ->setStatusCode(422)
+                    ->setJSON(['status' => 'error', 'errors'=> $response['errors'] ]);
+        }
+
         // PHP Rendering
         // return redirect()->to('/products')->with('message', $response);
         // AJAX RENDERING
-        return $this->response->setJSON($response);
+        return $this->response
+            ->setStatusCode(201)
+            ->setJSON([ 'status'=> $response['success'], 'message'=> $response['message'] ]);
     }
 
     public function edit($id){
@@ -45,10 +53,19 @@ class Product extends BaseController
         $data = $this->request->getRawInput();
         $response = $this->productService->update($id, $data);
 
+        if (isset($response['errors'])) {
+            return $this->response
+                    ->setStatusCode(422)
+                    ->setJSON(['status' => 'error', 'errors'=> $response['errors'] ]);
+        }
+
         // PHP Rendering
         // return redirect()->to('/products')->with('message', $response);
         // AJAX Rendering
-        return $this->response->setJSON($response);
+        return $this->response
+            ->setStatusCode(200)
+            // ->setJSON([ 'status'=> $response['success'], 'message'=> $response ]);
+            ->setJSON([ 'status'=> $response['success'], 'message'=> $response['message'] ]);
     }
 
     public function delete($id){

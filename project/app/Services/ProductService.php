@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\ProductModel;
+use App\Validations\ProductValidator;
 
 class ProductService{
 
@@ -23,17 +24,40 @@ class ProductService{
 
     public function create(array $data){
 
-        if (!$this->productModel->insert($data)) {
-            return ['error' => $this->productModel->errors()];
+
+        $validation = ProductValidator::validate($data);
+
+        if(!empty($validation['errors'])){
+            return [ 'errors' => $validation['errors'] ];
         }
-        return ['success' => 'Producto creado correctamente.'];
+
+        if (!$this->productModel->insert($data)) {
+            return ['errors' => $this->productModel->errors()];
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Producto creado correctamente.'
+        ];
+
     }
 
     public function update($id, array $data){
-        if (!$this->productModel->update($id, $data)){
-            return [ 'error' => $this->productModel->errors()];
+
+        $validation = ProductValidator::validate($data);
+
+        if(!empty($validation['errors'])){
+            return [ 'errors' => $validation['errors'] ];
         }
-        return [ 'success' => 'Producto actualizado correctamente.'];
+
+        if (!$this->productModel->update($id, $data)){
+            return [ 'errors' => $this->productModel->errors()];
+        }
+
+        return [ 
+            'success' => true,
+            'message' => 'Producto actualizado correctamente.'
+        ];
     }
 
     public function delete($id){

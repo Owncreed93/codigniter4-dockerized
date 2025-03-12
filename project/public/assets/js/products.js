@@ -121,7 +121,7 @@ $(document).ready(function () {
       : `${base_url}/products/create`;
     let method = "POST";
 
-    let priceValue = parseFloat($("#price").val()).toFixed(2);
+    let priceValue = Number(parseFloat($("#price").val()).toFixed(2));
 
     $.ajax({
       url: url,
@@ -133,13 +133,24 @@ $(document).ready(function () {
         price: priceValue,
       },
       success: function (response) {
-        if (response.success) {
+        if (!response) {
+          console.error("Error: Respuesta vacía del servidor.");
+          alert("Error: El servidor no devolvió datos.");
+          return;
+      }
+        if (response.status) {
+          console.log(response.message);
           $("#productModal").modal("hide");
           productTable.ajax.reload(null, false);
         } else {
           console.error("Error en respuesta:", response);
+          alert(`Corrige los errores: \n ${Object.values(response.errors).join('\n')}`)
         }
       },
+      error: function (xhr) {
+        console.error(`Error: ${xhr.responseText}`);
+        alert('Ocurrió un error al procesar la solicitud.')
+      }
     });
   });
 
@@ -165,7 +176,6 @@ $(document).ready(function () {
       console.error("Error en la petición AJAX", error);
     });
 
-    // $('#productForm').find('#name')[0].value = 'GAA'
     $("#productModal").modal("show");
   });
 
