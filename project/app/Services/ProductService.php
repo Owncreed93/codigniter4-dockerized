@@ -95,7 +95,7 @@ class ProductService{
                 return ['error' => 'No se pudo eliminar el producto.'];
             }
 
-            $this->logger->info('Product ID {$id} deleted.');
+            $this->logger->info('Product\'s' .$id .'deleted.');
             return ['success' => 'Producto eliminado correctamente.'];
         } catch (\Throwable $th) {
             $this->logger->error('Error while deleting the product: ' .$th->getMessage());

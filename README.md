@@ -24,7 +24,7 @@ composer install
 ## Change Codeigniter 4 .env
 ```bash
 CI_ENVIRONMENT = development
-app.baseURL = 'http://0.0.0.0:8080/' # Usually this url
+app.baseURL = 'http://127.0.1.0:8080/' # Usually this url
 database.default.hostname = <your_db_container>
 database.default.database = <your_db_name>
 database.default.username = <your_db_username>
