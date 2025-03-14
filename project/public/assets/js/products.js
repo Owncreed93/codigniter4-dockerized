@@ -1,14 +1,16 @@
 $(document).ready(function () {
-  // const base_url = "http://0.0.0.0:8080";
+  // const base_url = "http://127.0.1.0:8080";
   const base_url = window.location.origin;
   const products_base_url = `${base_url}/api/products`
   console.log('This is the local base_url: ', products_base_url);
+
   const productModalTitle = $("#productModal").find(".modal-title")[0];
   const productForm = $("#productForm");
   const productIdTag = productForm.find("#productId")[0];
   const productName = productForm.find("#name")[0];
   const productBrand = productForm.find("#brand")[0];
   const productPrice = productForm.find("#price")[0];
+
 
   const priceRegex = /^\d{1,6}(\.\d{1,2})?$/;
   const numberRegex = /[0-9]/g;
@@ -50,8 +52,10 @@ $(document).ready(function () {
 
   // Abrir modal para agregar producto
   $("#productModal").on("show.bs.modal", function (event) {
-
-
+    $(this).find('.modal-header')
+      .removeClass('border-bottom border-warning') // Elimina clases anteriores
+      .addClass('border-bottom border-primary'); // Agrega la nueva clase
+    productModalTitle.innerText = "Agregar Producto";
     let isValid = true;
     $("#productForm")[0].reset();
     $("#productId").val("");
@@ -116,7 +120,6 @@ $(document).ready(function () {
   // Guardar producto
   $("#productForm").submit(function (e) {
     e.preventDefault();
-    productModalTitle.innerText = "Agregar Producto";
     let id = $("#productId").val();
     // let url = id ? `api/products/update/${id}` : 'api/products/create';
     let url = id
@@ -162,7 +165,7 @@ $(document).ready(function () {
 
   // Cargar producto en modal de edición
   $("#productTable").on("click", ".edit", function () {
-    productModalTitle.innerText = "Editar Producto";
+    
     const id = $(this).data("id");
 
     $.get(`${products_base_url}/get/${id}`, function (product) {
@@ -183,6 +186,10 @@ $(document).ready(function () {
     });
 
     $("#productModal").modal("show");
+    let modalHeader = $('#productModal').find('.modal-header')
+    modalHeader.removeClass('border-bottom border-primary')
+               .addClass('border-bottom border-warning');
+    productModalTitle.innerText = "Editar Producto";
   });
 
   // Confirmar eliminación
@@ -190,6 +197,8 @@ $(document).ready(function () {
     let id = $(this).data("id");
     $("#deleteProductId").val(id);
     $("#deleteModal").modal("show");
+    $('#deleteModal').find('.modal-header')
+        .addClass('border-bottom border-danger');
   });
 
   $("#confirmDelete").click(function () {
@@ -213,4 +222,11 @@ $(document).ready(function () {
       
     });
   });
+
+  $('#productModal').on('hidden.bs.modal', function () {
+    $(this).find('.modal-header')
+        .removeClass('border-bottom border-primary border-warning border-danger');
+    productModalTitle.innerText = "";
+  });
+
 });
