@@ -1,7 +1,8 @@
 $(document).ready(function () {
   // const base_url = "http://0.0.0.0:8080";
   const base_url = window.location.origin;
-  console.log('This is the local base_url: ', base_url);
+  const products_base_url = `${base_url}/api/products`
+  console.log('This is the local base_url: ', products_base_url);
   const productModalTitle = $("#productModal").find(".modal-title")[0];
   const productForm = $("#productForm");
   const productIdTag = productForm.find("#productId")[0];
@@ -14,8 +15,8 @@ $(document).ready(function () {
 
   let productTable = $("#productTable").DataTable({
     ajax: {
-      //url: '/products/list',
-      url: `${base_url}/products/list`,
+      //url: 'api/products/list',
+      url: `${products_base_url}/list`,
       dataSrc: "",
     },
     columns: [
@@ -117,10 +118,10 @@ $(document).ready(function () {
     e.preventDefault();
     productModalTitle.innerText = "Agregar Producto";
     let id = $("#productId").val();
-    // let url = id ? `/products/update/${id}` : '/products/create';
+    // let url = id ? `api/products/update/${id}` : 'api/products/create';
     let url = id
-      ? `${base_url}/products/update/${id}`
-      : `${base_url}/products/create`;
+      ? `${products_base_url}/update/${id}`
+      : `${products_base_url}/create`;
     let method = "POST";
 
     let priceValue = Number(parseFloat($("#price").val()).toFixed(2));
@@ -164,7 +165,7 @@ $(document).ready(function () {
     productModalTitle.innerText = "Editar Producto";
     const id = $(this).data("id");
 
-    $.get(`/products/get/${id}`, function (product) {
+    $.get(`${products_base_url}/get/${id}`, function (product) {
       if (!product || Object.keys(product).length === 0) {
         console.error("Error: No se pudo cargar la información del producto.");
         return;
@@ -194,8 +195,8 @@ $(document).ready(function () {
   $("#confirmDelete").click(function () {
     let id = $("#deleteProductId").val();
     $.ajax({
-      // url: `/products/delete/${id}`,
-      url: `${base_url}/products/delete/${id}`,
+      // url: `api/products/delete/${id}`,
+      url: `${products_base_url}/delete/${id}`,
       method: "DELETE",
       success: function (response) {
         if (response.success) {
