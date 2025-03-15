@@ -11,6 +11,8 @@
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
 
+    <link rel="stylesheet" href="<?= base_url('assets/css/main.css') ?>">
+
     <!-- Fontawesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
@@ -64,7 +66,7 @@
                             <label class="form-label">Precio</label>
                             <input type="number" id="price" min="0.00" max="10000.00" step=".01" class="form-control" required>
                         </div>
-                        <button type="submit" class="btn btn-success">Guardar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
                     </form>
                 </div>
             </div>
@@ -87,6 +89,25 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal de Notificación -->
+    <div class="modal fade" id="notificationModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="notificationTitle"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="notificationMessage">
+                    <!-- Aquí irá el mensaje dinámico -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- jQuery, DataTables y Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>

@@ -1,0 +1,6 @@
+
+/* GENERAL BUTTONS */
+.btn-disabled {
+    pointer-events: none; /* Evita que el botón sea clickeable */
+    opacity: 0.5; /* Reduce la opacidad para indicar que está desactivado */
+}
