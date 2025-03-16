@@ -83,7 +83,7 @@ class ProductService{
                 'message' => 'Producto actualizado correctamente.'
             ];
         } catch (\Throwable $th) {
-            $this->logger->error('Error updating the product with ID {$id}' .$th->getMessage());
+            $this->logger->error('Error updating the product with ID ' .$id .': ' .$th->getMessage());
             return ['errors' => 'Ocurrió un error al actualizar el producto.'];
         }
         
