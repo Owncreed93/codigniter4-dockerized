@@ -4,11 +4,6 @@ $(document).ready(function () {
   const products_base_url = `${base_url}/api/products`;
   console.log("This is the local base_url: ", products_base_url);
 
-  /**
-   * TODO: 2 ADD ANOTHER MODAL TO SHOW CONFIRMATION OR ERROR AFTER ACTIONS.
-   * TODO: 3 THIS NEW MODAL'S WILL ALSO HAVE THE COLOUR PATERN IN CRUD'S ACTIONS.
-   * TODO: 4 ADD PREVENT DEFAULT'S TO FORM
-   */
   let productModalHeader = $("#productModal").find(".modal-header");
   let productModalTitle = $("#productModal").find(".modal-title");
   const productForm = $("#productForm");

@@ -15,8 +15,15 @@ class Product extends BaseController
     }
 
     public function index(){
+        $styles = ['assets/css/products.css'];
+        $scripts = ['assets/js/products.js'];
         $products = $this->productService->getAll();
-        $data = ['products' => $products];
+        $data = [
+            'title' => 'Products',
+            'products' => $products,
+            'styles' => $styles,
+            'scripts' => $scripts
+        ];
         return view('/products/index', $data);
     }
 
