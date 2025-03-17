@@ -33,6 +33,22 @@ database.default.DBDriver = MySQLi # usually Mysqli
 database.default.port = <your_db_port>
 ```
 
+
+## Create the file for controller
+```bash
+docker exec -it <container_name> php spark make:controller <YourController>
+```
+
+## Create the file for entity
+```bash
+docker exec -it <container_name> php spark make:entity <Entity>
+```
+
+## Create the file for seeder
+```bash
+docker exec -it <container_name> php spark make:seeder <Seeder>
+```
+
 ## Create the file for migration
 ```bash
 docker exec -it <container_name> php spark make:migration CreateProductosTable

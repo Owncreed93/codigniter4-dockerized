@@ -12,8 +12,8 @@ class ProductModel extends Model
     protected $returnType = ProductEntity::class;
 
     protected $allowedFields = [ 'name', 'brand', 'price', 'active' ];
-    protected $useTimestamps = true;
-    protected $useSoftDeletes = true;
+    protected $useTimestamps = false;
+    // protected $useSoftDeletes = true;
 
     protected function initialize()
     {

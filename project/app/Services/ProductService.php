@@ -2,8 +2,12 @@
 
 namespace App\Services;
 
+use App\Entities\AuditLogEntity;
 use App\Models\ProductModel;
+use App\Models\AuditLogModel;
 use App\Validations\ProductValidator;
+
+
 
 class ProductService{
 
@@ -21,7 +25,7 @@ class ProductService{
         try {
             return $this->productModel->findAll();
         } catch (\Throwable $th) {
-           $this->logger->error('Error whil fetching the product:', $th->getMessage());
+           $this->logger->error('Error whil fetching the product:' .$th->getMessage());
            return ['errors' => 'No se pudieron obtener los productos.'];
         }
         
@@ -52,7 +56,27 @@ class ProductService{
                 return ['errors' => $this->productModel->errors()];
             }
 
-            $this->logger->info('Product created'. json_encode($validation['data']));
+            $id = $this->productModel->getInsertID();
+
+            $this->logger->info('Product created: '. json_encode($validation['data']));
+            /**
+             *? IS IT A GOOD IDEA TO CREATE METHODS FOR AUDITLOGENTITY?
+             *? CRUD WILL HAVE PROPERTY: ACTION AFFECTED WITH create/update/delete
+             *? ENUM NEEDED FOR ACTION PROPERTY?
+             */
+            //TODO: RESEARCH HOW TO GET CREATED_PRODUCT AND TEST .toJSON METHOD FROM BASICENTITY
+            $auditLog = new AuditLogEntity([
+                'user_id' => 0, // auth()->id() ?? null
+                'model' => $this->productModel,
+                'record_id' => $id,
+                'action' => 'create',
+                'old_data' => 'Newly added', //TODO: VERIFY WHY THE "ACTIVE" FIELD DOESN'T APPEAR ON THE BD RECORD
+                'new_data' => json_encode($validation['data'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+                'logged_at' => date('Y-m-d H:i:s')
+            ]);
+
+            $auditLogModel = new AuditLogModel();
+            $auditLogModel->insert($auditLog);
             return [
                 'success' => true,
                 'message' => 'Producto creado correctamente.'

@@ -16,6 +16,10 @@ class BaseEntity extends Entity {
         return $this;
     }
 
+    public function toJson(): string {
+        return json_encode($this->toArray(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    }
+
 }
 
 ?>
