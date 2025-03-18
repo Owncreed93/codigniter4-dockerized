@@ -64,7 +64,6 @@ class ProductService{
              *? CRUD WILL HAVE PROPERTY: ACTION AFFECTED WITH create/update/delete
              *? ENUM NEEDED FOR ACTION PROPERTY?
              */
-            //TODO: RESEARCH HOW TO GET CREATED_PRODUCT AND TEST .toJSON METHOD FROM BASICENTITY
             $auditLog = new AuditLogEntity([
                 'user_id' => 0, // auth()->id() ?? null
                 'model' => $this->productModel,
@@ -91,6 +90,9 @@ class ProductService{
     public function update($id, array $data){
 
         try {
+
+            $oldData = $this->productModel->find($id);
+
             $validation = ProductValidator::validate($data);
 
             if(!empty($validation['errors'])){
@@ -102,6 +104,20 @@ class ProductService{
             }
 
             $this->logger->info('Product ID {$id}');
+
+            $auditLog = new AuditLogEntity([
+                'user_id' => 0,
+                'model' => $this->productModel,
+                'record_id' => $id,
+                'action' => 'update',
+                'old_data' => $oldData->toJson(),
+                'new_data' => json_encode($validation['data'], JSON_UNESCAPED_UNICODE, JSON_UNESCAPED_SLASHES),
+                'logged_at' => date('Y-m-d H:i:s')   
+            ]);
+
+            $auditLogModel = new AuditLogModel();
+            $auditLogModel->insert($auditLog);
+
             return [ 
                 'success' => true,
                 'message' => 'Producto actualizado correctamente.'
@@ -115,9 +131,30 @@ class ProductService{
 
     public function delete($id){
         try {
+
+            // Obtener el producto
+            $product = $this->productModel->find($id);
+
+            if (!$product) {
+                return ['errors' => 'Producto no encontrado.'];
+            }
+
             if (!$this->productModel->delete($id)){
                 return ['error' => 'No se pudo eliminar el producto.'];
             }
+
+            $auditLog = new AuditLogEntity([
+                'user_id'   => 0, // auth()->id() ?? null (Se actualizará cuando se implemente autenticación)
+                'model'     => $this->productModel,
+                'record_id' => $id,
+                'action'    => 'delete',
+                'old_data'  => $product->toJson(), // Estado anterior
+                'new_data'  => 'deleted', // Nuevo estado
+                'logged_at' => date('Y-m-d H:i:s')
+            ]);
+
+            $auditLogModel = new AuditLogModel();
+            $auditLogModel->insert($auditLog);
 
             $this->logger->info('Product\'s id: ' .$id .' deleted.');
             return ['success' => 'Producto eliminado correctamente.'];
@@ -127,6 +164,49 @@ class ProductService{
         }
         
     }
+
+    public function softDelete($id)
+    {
+        try {
+            // Obtener el producto
+            $product = $this->productModel->find($id);
+
+            if (!$product) {
+                return ['errors' => 'Producto no encontrado.'];
+            }
+
+            // Aplicar el método toggleActive() desde BaseEntity
+            $product->toggleActive();
+
+            // Guardar los cambios en la base de datos
+            if (!$this->productModel->update($id, ['active' => $product->active])) {
+                return ['errors' => 'No se pudo desactivar el estado del producto.'];
+            }
+
+            // Registrar en AuditLog
+            $auditLog = new AuditLogEntity([
+                'user_id'   => 0, // auth()->id() ?? null (Se actualizará cuando se implemente autenticación)
+                'model'     => $this->productModel,
+                'record_id' => $id,
+                'action'    => 'soft_delete',
+                'old_data'  => json_encode(['active' => !$product->active]), // Estado anterior
+                'new_data'  => json_encode(['active' => $product->active]), // Nuevo estado
+                'logged_at' => date('Y-m-d H:i:s')
+            ]);
+
+            $auditLogModel = new AuditLogModel();
+            $auditLogModel->insert($auditLog);
+
+            // Registrar en el logger
+            $this->logger->info("Product ID {$id} soft deleted.");
+
+            return ['success' => true, 'message' => 'Producto desactivado correctamente.'];
+        } catch (\Throwable $th) {
+            $this->logger->error('Error in soft deleting product: ' . $th->getMessage());
+            return ['errors' => 'Ocurrió un error al desactivar el producto.'];
+        }
+    }
+
 
     public function search($query){
         try {

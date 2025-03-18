@@ -107,8 +107,28 @@ class Product extends BaseController
             return $this->response->setStatusCode(500)->setJSON(['status' => 'error', 'errors'=> 'Error.' ]);
         }
         
+    }
 
-        
+    public function softDelete($id)
+    {
+        try {
+            log_message('debug', "Soft deleting product with ID: " .$id);
+            $response = $this->productService->softDelete($id);
+
+            if (isset($response['errors'])) {
+                log_message('error', "Error while soft deleting product: " . json_encode($response['errors']));
+                return $this->response
+                    ->setStatusCode(422)
+                    ->setJSON(['status' => 'error', 'errors' => $response['errors']]);
+            }
+
+            return $this->response
+                ->setStatusCode(200)
+                ->setJSON(['status' => $response['success'], 'message' => $response['message']]);
+        } catch (\Throwable $th) {
+            log_message('error', "Error in soft deleting product: " . $th->getMessage());
+            return $this->response->setStatusCode(500)->setJSON(['status' => 'error', 'errors' => 'Error al desactivar el producto.']);
+        }
     }
 
     public function search()

@@ -254,10 +254,12 @@ $(document).ready(function () {
     let id = $("#deleteProductId").val();
     $.ajax({
       // url: `api/products/delete/${id}`,
-      url: `${products_base_url}/delete/${id}`,
-      method: "DELETE",
+      // url: `${products_base_url}/delete/${id}`,
+      // method: "DELETE",
+      url: `${products_base_url}/sdelete/${id}`,
+      method: "POST",
       success: function (response) {
-        if (response.success) {
+        if (response.status) {
           console.log("Producto eliminado correctamente.");
           $("#deleteModal").modal("hide");
           showNotification('Éxito', 'Producto eliminado correctamente.', 'success')

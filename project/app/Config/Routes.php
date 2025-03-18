@@ -15,6 +15,7 @@ $routes->group('api', function($routes){
         $routes->post('create', 'Product::create');
         $routes->get('edit/(:num)', 'Product::edit/$1');
         $routes->post('update/(:num)', 'Product::update/$1');
+        $routes->post('sdelete/(:num)', 'Product::softDelete/$1');
         $routes->delete('delete/(:num)', 'Product::delete/$1');
         $routes->get('search', 'Product::search');
         $routes->get('list', 'Product::list');
