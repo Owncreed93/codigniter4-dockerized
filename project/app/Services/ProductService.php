@@ -59,17 +59,13 @@ class ProductService{
             $id = $this->productModel->getInsertID();
 
             $this->logger->info('Product created: '. json_encode($validation['data']));
-            /**
-             *? IS IT A GOOD IDEA TO CREATE METHODS FOR AUDITLOGENTITY?
-             *? CRUD WILL HAVE PROPERTY: ACTION AFFECTED WITH create/update/delete
-             *? ENUM NEEDED FOR ACTION PROPERTY?
-             */
+
             $auditLog = new AuditLogEntity([
                 'user_id' => 0, // auth()->id() ?? null
                 'model' => $this->productModel,
                 'record_id' => $id,
                 'action' => 'create',
-                'old_data' => 'Newly added', //TODO: VERIFY WHY THE "ACTIVE" FIELD DOESN'T APPEAR ON THE BD RECORD
+                'old_data' => 'Newly added',
                 'new_data' => json_encode($validation['data'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
                 'logged_at' => date('Y-m-d H:i:s')
             ]);
@@ -103,7 +99,7 @@ class ProductService{
                 return [ 'errors' => $this->productModel->errors()];
             }
 
-            $this->logger->info('Product ID {$id}');
+            $this->logger->info("Product ID {$id} updated...");
 
             $auditLog = new AuditLogEntity([
                 'user_id' => 0,
@@ -132,7 +128,6 @@ class ProductService{
     public function delete($id){
         try {
 
-            // Obtener el producto
             $product = $this->productModel->find($id);
 
             if (!$product) {
@@ -144,19 +139,19 @@ class ProductService{
             }
 
             $auditLog = new AuditLogEntity([
-                'user_id'   => 0, // auth()->id() ?? null (Se actualizará cuando se implemente autenticación)
+                'user_id'   => 0,
                 'model'     => $this->productModel,
                 'record_id' => $id,
                 'action'    => 'delete',
-                'old_data'  => $product->toJson(), // Estado anterior
-                'new_data'  => 'deleted', // Nuevo estado
+                'old_data'  => $product->toJson(), 
+                'new_data'  => 'deleted',
                 'logged_at' => date('Y-m-d H:i:s')
             ]);
 
             $auditLogModel = new AuditLogModel();
             $auditLogModel->insert($auditLog);
 
-            $this->logger->info('Product\'s id: ' .$id .' deleted.');
+            $this->logger->info("Product\'s id: {$id}  deleted.");
             return ['success' => 'Producto eliminado correctamente.'];
         } catch (\Throwable $th) {
             $this->logger->error('Error while deleting the product: ' .$th->getMessage());
@@ -175,15 +170,15 @@ class ProductService{
                 return ['errors' => 'Producto no encontrado.'];
             }
 
-            // Aplicar el método toggleActive() desde BaseEntity
+
             $product->toggleActive();
 
-            // Guardar los cambios en la base de datos
+
             if (!$this->productModel->update($id, ['active' => $product->active])) {
                 return ['errors' => 'No se pudo desactivar el estado del producto.'];
             }
 
-            // Registrar en AuditLog
+
             $auditLog = new AuditLogEntity([
                 'user_id'   => 0, // auth()->id() ?? null (Se actualizará cuando se implemente autenticación)
                 'model'     => $this->productModel,
@@ -197,7 +192,7 @@ class ProductService{
             $auditLogModel = new AuditLogModel();
             $auditLogModel->insert($auditLog);
 
-            // Registrar en el logger
+
             $this->logger->info("Product ID {$id} soft deleted.");
 
             return ['success' => true, 'message' => 'Producto desactivado correctamente.'];
