@@ -60,3 +60,19 @@ docker exec -it testing_codeigniter php spark make:migration CreateProductosTabl
 docker exec -it <container_name> php spark migrate
 docker exec -it testing_codeigniter php spark migrate
 ```
+
+## Show installed package
+```bash
+composer show <phpunit/phpunit>
+```
+
+## Add composer's package
+```bash
+composer require --dev phpunit/phpunit
+```
+
+## Add composer's package
+```bash
+php vendor/bin/phpunit tests/Entities/ProductEntityTest.php 
+```
+

@@ -188,7 +188,6 @@ class Database extends Config
             'time'     => 'H:i:s',
         ],
     ];
-
     public function __construct()
     {
         parent::__construct();
